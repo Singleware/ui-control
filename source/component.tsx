@@ -25,19 +25,31 @@ export class Component<T extends Properties> implements JSX.ElementClass {
   protected readonly children: any[];
 
   /**
-   * Binds the specified descriptor from the given prototype to be called with the current access rules.
+   * Binds the property descriptor from the specified prototype to be called with the specified context.
+   * @param context Context.
    * @param prototype Source prototype.
    * @param property Property name.
    * @returns Returns a new property descriptor.
    * @throws Throws an error when the specified property was not found.
    */
   @Class.Protected()
-  protected bindDescriptor(prototype: Object, property: PropertyKey): PropertyDescriptor {
+  protected bindDescriptor(context: Object, prototype: Object, property: PropertyKey): PropertyDescriptor {
     const descriptor = Object.getOwnPropertyDescriptor(prototype, property);
     if (!descriptor) {
       throw new Error(`Property '${property as string}' was not found.`);
     }
-    return Class.bindDescriptor(descriptor);
+    const newer = { ...descriptor };
+    if (newer.value) {
+      newer.value = newer.value.bind(context);
+    } else {
+      if (newer.get) {
+        newer.get = newer.get.bind(context);
+      }
+      if (newer.set) {
+        newer.set = newer.set.bind(context);
+      }
+    }
+    return newer;
   }
 
   /**
@@ -52,9 +64,10 @@ export class Component<T extends Properties> implements JSX.ElementClass {
 
   /**
    * Get control instance.
+   * @throws Always throw an exception when it is not implemented.
    */
   @Class.Public()
   public get element(): HTMLElement {
-    return <div /> as HTMLDivElement;
+    throw new Error(`Component not implemented.`);
   }
 }

@@ -77,11 +77,11 @@ let Helper = Helper_1 = class Helper {
      */
     static setChildProperty(slot, property, value) {
         const child = Helper_1.getChildByProperty(slot, property);
-        if (!child) {
-            return false;
+        if (child) {
+            child[property] = value;
+            return true;
         }
-        child[property] = value;
-        return true;
+        return false;
     }
     /**
      * Assign all values mapped by the specified keys into the target object.

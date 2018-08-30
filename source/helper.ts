@@ -80,11 +80,11 @@ export class Helper {
   @Class.Public()
   public static setChildProperty(slot: HTMLSlotElement, property: PropertyKey, value: any): boolean {
     const child = Helper.getChildByProperty(slot, property);
-    if (!child) {
-      return false;
+    if (child) {
+      (<any>child)[property] = value;
+      return true;
     }
-    (<any>child)[property] = value;
-    return true;
+    return false;
   }
 
   /**

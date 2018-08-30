@@ -11,7 +11,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * This source code is licensed under the MIT License as described in the file LICENSE.
  */
 const Class = require("@singleware/class");
-const DOM = require("@singleware/jsx");
 /**
  * Control component class.
  */
@@ -26,24 +25,38 @@ let Component = class Component {
         this.children = Object.freeze(children || []);
     }
     /**
-     * Binds the specified descriptor from the given prototype to be called with the current access rules.
+     * Binds the property descriptor from the specified prototype to be called with the specified context.
+     * @param context Context.
      * @param prototype Source prototype.
      * @param property Property name.
      * @returns Returns a new property descriptor.
      * @throws Throws an error when the specified property was not found.
      */
-    bindDescriptor(prototype, property) {
+    bindDescriptor(context, prototype, property) {
         const descriptor = Object.getOwnPropertyDescriptor(prototype, property);
         if (!descriptor) {
             throw new Error(`Property '${property}' was not found.`);
         }
-        return Class.bindDescriptor(descriptor);
+        const newer = { ...descriptor };
+        if (newer.value) {
+            newer.value = newer.value.bind(context);
+        }
+        else {
+            if (newer.get) {
+                newer.get = newer.get.bind(context);
+            }
+            if (newer.set) {
+                newer.set = newer.set.bind(context);
+            }
+        }
+        return newer;
     }
     /**
      * Get control instance.
+     * @throws Always throw an exception when it is not implemented.
      */
     get element() {
-        return DOM.create("div", null);
+        throw new Error(`Component not implemented.`);
     }
 };
 __decorate([

@@ -4,7 +4,7 @@
  */
 import * as Class from '@singleware/class';
 
-import { Callback } from './types';
+import { Constructor, Callback } from './types';
 
 /**
  * Control helper class.
@@ -12,17 +12,17 @@ import { Callback } from './types';
 @Class.Describe()
 export class Helper {
   /**
-   * List all children that contains the expected property in the element slot and executes the given callback for each result.
+   * List all children that are instance of expected type in the provided element slot and executes the given callback for each child.
    * @param slot Element slot.
-   * @param property Expected property.
-   * @param callback Callback to be executed for each element found.
+   * @param type Expected instance type.
+   * @param callback Callback to be executed for each child.
    * @returns Returns the same value returned by the callback or undefined if the callback returns nothing.
    */
   @Class.Public()
-  public static listChildByProperty(slot: HTMLSlotElement, property: PropertyKey, callback: Callback): any {
+  public static listChildByType<T extends HTMLElement>(slot: HTMLSlotElement, type: Constructor<T>, callback: Callback): any {
     const children = slot.assignedNodes();
     for (const child of children) {
-      if (child instanceof HTMLElement && property in child) {
+      if (child instanceof type) {
         const result = callback(child);
         if (result !== void 0) {
           return result;
@@ -33,6 +33,36 @@ export class Helper {
   }
 
   /**
+   * List all children that contains the expected property in the provided element slot and executes the given callback for each child.
+   * @param slot Element slot.
+   * @param property Expected property.
+   * @param callback Callback to be executed for each child.
+   * @returns Returns the same value returned by the callback or undefined if the callback returns nothing.
+   */
+  @Class.Public()
+  public static listChildByProperty(slot: HTMLSlotElement, property: PropertyKey, callback: Callback): any {
+    return this.listChildByType(slot, HTMLElement, (child: HTMLElement) => {
+      if (property in child) {
+        const result = callback(child);
+        if (result !== void 0) {
+          return result;
+        }
+      }
+    });
+  }
+
+  /**
+   * Gets the first child that is instance of the provided expected type from the specified element slot.
+   * @param slot Element slot.
+   * @param type Expected instance type.
+   * @returns Returns the first child or undefined when there is no child found.
+   */
+  @Class.Public()
+  public static getChildByType<T extends HTMLElement>(slot: HTMLSlotElement, type: Constructor<T>): HTMLElement | undefined {
+    return this.listChildByType(slot, type, (child: HTMLElement) => child);
+  }
+
+  /**
    * Gets the first child that contains the expected property from the specified element slot.
    * @param slot Element slot.
    * @param property Expected property.
@@ -40,9 +70,7 @@ export class Helper {
    */
   @Class.Public()
   public static getChildByProperty(slot: HTMLSlotElement, property: PropertyKey): HTMLElement | undefined {
-    return Helper.listChildByProperty(slot, property, (child: HTMLElement) => {
-      return child;
-    });
+    return this.listChildByProperty(slot, property, (child: HTMLElement) => child);
   }
 
   /**
@@ -53,7 +81,7 @@ export class Helper {
    */
   @Class.Public()
   public static getChildProperty(slot: HTMLSlotElement, property: PropertyKey): any {
-    const child = Helper.getChildByProperty(slot, property);
+    const child = this.getChildByProperty(slot, property);
     return child ? (<any>child)[property] : void 0;
   }
 
@@ -65,7 +93,7 @@ export class Helper {
    */
   @Class.Public()
   public static setChildrenProperty(slot: HTMLSlotElement, property: PropertyKey, value: any): void {
-    Helper.listChildByProperty(slot, property, (child: any) => {
+    this.listChildByProperty(slot, property, (child: any) => {
       child[property] = value;
     });
   }
@@ -79,7 +107,7 @@ export class Helper {
    */
   @Class.Public()
   public static setChildProperty(slot: HTMLSlotElement, property: PropertyKey, value: any): boolean {
-    const child = Helper.getChildByProperty(slot, property);
+    const child = this.getChildByProperty(slot, property);
     if (child) {
       (<any>child)[property] = value;
       return true;

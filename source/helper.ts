@@ -12,14 +12,14 @@ import { Constructor, Callback } from './types';
 @Class.Describe()
 export class Helper {
   /**
-   * List all children that are instance of expected type in the provided element slot and executes the given callback for each child.
+   * List all children of the expected type in the provided element slot and executes the given callback for each child.
    * @param slot Element slot.
    * @param type Expected instance type.
-   * @param callback Callback to be executed for each child.
-   * @returns Returns the same value returned by the callback or undefined if the callback returns nothing.
+   * @param callback Callback to be performed.
+   * @returns Returns the same value returned by the callback or undefined if the callback has no returns.
    */
   @Class.Public()
-  public static listChildByType<T extends HTMLElement>(slot: HTMLSlotElement, type: Constructor<T>, callback: Callback): any {
+  public static listChildrenByType<T extends HTMLElement>(slot: HTMLSlotElement, type: Constructor<T>, callback: Callback): any {
     const children = slot.assignedNodes();
     for (const child of children) {
       if (child instanceof type) {
@@ -37,11 +37,11 @@ export class Helper {
    * @param slot Element slot.
    * @param property Expected property.
    * @param callback Callback to be executed for each child.
-   * @returns Returns the same value returned by the callback or undefined if the callback returns nothing.
+   * @returns Returns the same value returned by the callback or undefined if the callback has no returns.
    */
   @Class.Public()
-  public static listChildByProperty(slot: HTMLSlotElement, property: PropertyKey, callback: Callback): any {
-    return this.listChildByType(slot, HTMLElement, (child: HTMLElement) => {
+  public static listChildrenByProperty(slot: HTMLSlotElement, property: PropertyKey, callback: Callback): any {
+    return this.listChildrenByType(slot, HTMLElement, (child: HTMLElement) => {
       if (property in child) {
         const result = callback(child);
         if (result !== void 0) {
@@ -52,14 +52,14 @@ export class Helper {
   }
 
   /**
-   * Gets the first child that is instance of the provided expected type from the specified element slot.
+   * Gets the first child of the expected type from the specified element slot.
    * @param slot Element slot.
    * @param type Expected instance type.
    * @returns Returns the first child or undefined when there is no child found.
    */
   @Class.Public()
   public static getChildByType<T extends HTMLElement>(slot: HTMLSlotElement, type: Constructor<T>): HTMLElement | undefined {
-    return this.listChildByType(slot, type, (child: HTMLElement) => child);
+    return this.listChildrenByType(slot, type, (child: HTMLElement) => child);
   }
 
   /**
@@ -70,7 +70,7 @@ export class Helper {
    */
   @Class.Public()
   public static getChildByProperty(slot: HTMLSlotElement, property: PropertyKey): HTMLElement | undefined {
-    return this.listChildByProperty(slot, property, (child: HTMLElement) => child);
+    return this.listChildrenByProperty(slot, property, (child: HTMLElement) => child);
   }
 
   /**
@@ -93,7 +93,7 @@ export class Helper {
    */
   @Class.Public()
   public static setChildrenProperty(slot: HTMLSlotElement, property: PropertyKey, value: any): void {
-    this.listChildByProperty(slot, property, (child: any) => {
+    this.listChildrenByProperty(slot, property, (child: any) => {
       child[property] = value;
     });
   }
@@ -113,23 +113,5 @@ export class Helper {
       return true;
     }
     return false;
-  }
-
-  /**
-   * Assign all values mapped by the specified keys into the target object.
-   * @param target Target object.
-   * @param values Values to be assigned.
-   * @param keys Keys to be assigned.
-   */
-  @Class.Public()
-  public static assignProperties(target: Object, values: Object, keys: string[]): void {
-    for (const key of keys) {
-      if (key in values) {
-        if (!(key in target)) {
-          throw new Error(`Property '${key}' can't be assigned.`);
-        }
-        (<any>target)[key] = (<any>values)[key];
-      }
-    }
   }
 }

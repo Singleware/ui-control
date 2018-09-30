@@ -25,31 +25,57 @@ let Component = class Component {
         this.children = Object.freeze(children || []);
     }
     /**
-     * Binds the property descriptor from the specified prototype to be called with the specified context.
-     * @param context Context.
+     * Binds the property descriptor from the specified prototype to be called with this istance context.
      * @param prototype Source prototype.
      * @param property Property name.
      * @returns Returns a new property descriptor.
      * @throws Throws an error when the specified property was not found.
      */
-    bindDescriptor(context, prototype, property) {
+    bindDescriptor(prototype, property) {
         const descriptor = Object.getOwnPropertyDescriptor(prototype, property);
         if (!descriptor) {
             throw new Error(`Property '${property}' was not found.`);
         }
         const newer = { ...descriptor };
         if (newer.value) {
-            newer.value = newer.value.bind(context);
+            newer.value = newer.value.bind(this);
         }
         else {
             if (newer.get) {
-                newer.get = newer.get.bind(context);
+                newer.get = newer.get.bind(this);
             }
             if (newer.set) {
-                newer.set = newer.set.bind(context);
+                newer.set = newer.set.bind(this);
             }
         }
         return newer;
+    }
+    /**
+     * Bind all specified properties from this instance into the target object.
+     * @param target Target object.
+     * @param properties Properties to be assigned.
+     */
+    bindComponentProperties(target, properties) {
+        const prototype = Reflect.getPrototypeOf(this);
+        for (const property of properties) {
+            Reflect.defineProperty(target, property, this.bindDescriptor(prototype, property));
+        }
+    }
+    /**
+     * Assign all mapped values by the specified properties into this instance.
+     * @param values Values to be assigned.
+     * @param properties Properties to be assigned.
+     * @throws Throws an error when some specified property does not exists in this instance.
+     */
+    assignComponentProperties(values, properties) {
+        for (const property of properties) {
+            if (property in values) {
+                if (!(property in this)) {
+                    throw new Error(`Property '${property}' can't be assigned.`);
+                }
+                this[property] = values[property];
+            }
+        }
     }
     /**
      * Get control instance.
@@ -66,8 +92,14 @@ __decorate([
     Class.Protected()
 ], Component.prototype, "children", void 0);
 __decorate([
-    Class.Protected()
+    Class.Private()
 ], Component.prototype, "bindDescriptor", null);
+__decorate([
+    Class.Protected()
+], Component.prototype, "bindComponentProperties", null);
+__decorate([
+    Class.Protected()
+], Component.prototype, "assignComponentProperties", null);
 __decorate([
     Class.Public()
 ], Component.prototype, "element", null);

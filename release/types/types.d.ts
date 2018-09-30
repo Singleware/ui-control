@@ -5,7 +5,7 @@
 import * as Class from '@singleware/class';
 
 /**
- * Declares the callback to list children.
+ * Type declaration for the callback to list children.
  */
 export type Callback = (child: HTMLElement) => any;
 

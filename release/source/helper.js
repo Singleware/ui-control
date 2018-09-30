@@ -16,13 +16,13 @@ const Class = require("@singleware/class");
  */
 let Helper = class Helper {
     /**
-     * List all children that are instance of expected type in the provided element slot and executes the given callback for each child.
+     * List all children of the expected type in the provided element slot and executes the given callback for each child.
      * @param slot Element slot.
      * @param type Expected instance type.
-     * @param callback Callback to be executed for each child.
-     * @returns Returns the same value returned by the callback or undefined if the callback returns nothing.
+     * @param callback Callback to be performed.
+     * @returns Returns the same value returned by the callback or undefined if the callback has no returns.
      */
-    static listChildByType(slot, type, callback) {
+    static listChildrenByType(slot, type, callback) {
         const children = slot.assignedNodes();
         for (const child of children) {
             if (child instanceof type) {
@@ -39,10 +39,10 @@ let Helper = class Helper {
      * @param slot Element slot.
      * @param property Expected property.
      * @param callback Callback to be executed for each child.
-     * @returns Returns the same value returned by the callback or undefined if the callback returns nothing.
+     * @returns Returns the same value returned by the callback or undefined if the callback has no returns.
      */
-    static listChildByProperty(slot, property, callback) {
-        return this.listChildByType(slot, HTMLElement, (child) => {
+    static listChildrenByProperty(slot, property, callback) {
+        return this.listChildrenByType(slot, HTMLElement, (child) => {
             if (property in child) {
                 const result = callback(child);
                 if (result !== void 0) {
@@ -52,13 +52,13 @@ let Helper = class Helper {
         });
     }
     /**
-     * Gets the first child that is instance of the provided expected type from the specified element slot.
+     * Gets the first child of the expected type from the specified element slot.
      * @param slot Element slot.
      * @param type Expected instance type.
      * @returns Returns the first child or undefined when there is no child found.
      */
     static getChildByType(slot, type) {
-        return this.listChildByType(slot, type, (child) => child);
+        return this.listChildrenByType(slot, type, (child) => child);
     }
     /**
      * Gets the first child that contains the expected property from the specified element slot.
@@ -67,7 +67,7 @@ let Helper = class Helper {
      * @returns Returns the first child or undefined when there is no child found.
      */
     static getChildByProperty(slot, property) {
-        return this.listChildByProperty(slot, property, (child) => child);
+        return this.listChildrenByProperty(slot, property, (child) => child);
     }
     /**
      * Gets the property value from the first child that contains the expected property in the specified element slot.
@@ -86,7 +86,7 @@ let Helper = class Helper {
      * @param value New property value.
      */
     static setChildrenProperty(slot, property, value) {
-        this.listChildByProperty(slot, property, (child) => {
+        this.listChildrenByProperty(slot, property, (child) => {
             child[property] = value;
         });
     }
@@ -105,29 +105,13 @@ let Helper = class Helper {
         }
         return false;
     }
-    /**
-     * Assign all values mapped by the specified keys into the target object.
-     * @param target Target object.
-     * @param values Values to be assigned.
-     * @param keys Keys to be assigned.
-     */
-    static assignProperties(target, values, keys) {
-        for (const key of keys) {
-            if (key in values) {
-                if (!(key in target)) {
-                    throw new Error(`Property '${key}' can't be assigned.`);
-                }
-                target[key] = values[key];
-            }
-        }
-    }
 };
 __decorate([
     Class.Public()
-], Helper, "listChildByType", null);
+], Helper, "listChildrenByType", null);
 __decorate([
     Class.Public()
-], Helper, "listChildByProperty", null);
+], Helper, "listChildrenByProperty", null);
 __decorate([
     Class.Public()
 ], Helper, "getChildByType", null);
@@ -143,9 +127,6 @@ __decorate([
 __decorate([
     Class.Public()
 ], Helper, "setChildProperty", null);
-__decorate([
-    Class.Public()
-], Helper, "assignProperties", null);
 Helper = __decorate([
     Class.Describe()
 ], Helper);

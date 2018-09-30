@@ -8,9 +8,13 @@ export { Properties } from './properties';
 import { Helper } from './helper';
 
 // Aliases
-export const listChildByProperty = Helper.listChildByProperty;
+export const listChildrenByType = Helper.listChildrenByType;
+export const listChildrenByProperty = Helper.listChildrenByProperty;
+
+export const getChildByType = Helper.getChildByType;
 export const getChildByProperty = Helper.getChildByProperty;
+
 export const getChildProperty = Helper.getChildProperty;
-export const setChildrenProperty = Helper.setChildrenProperty;
 export const setChildProperty = Helper.setChildProperty;
-export const assignProperties = Helper.assignProperties;
+
+export const setChildrenProperty = Helper.setChildrenProperty;

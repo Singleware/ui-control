@@ -4,23 +4,23 @@ import { Constructor, Callback } from './types';
  */
 export declare class Helper {
     /**
-     * List all children that are instance of expected type in the provided element slot and executes the given callback for each child.
+     * List all children of the expected type in the provided element slot and executes the given callback for each child.
      * @param slot Element slot.
      * @param type Expected instance type.
-     * @param callback Callback to be executed for each child.
-     * @returns Returns the same value returned by the callback or undefined if the callback returns nothing.
+     * @param callback Callback to be performed.
+     * @returns Returns the same value returned by the callback or undefined if the callback has no returns.
      */
-    static listChildByType<T extends HTMLElement>(slot: HTMLSlotElement, type: Constructor<T>, callback: Callback): any;
+    static listChildrenByType<T extends HTMLElement>(slot: HTMLSlotElement, type: Constructor<T>, callback: Callback): any;
     /**
      * List all children that contains the expected property in the provided element slot and executes the given callback for each child.
      * @param slot Element slot.
      * @param property Expected property.
      * @param callback Callback to be executed for each child.
-     * @returns Returns the same value returned by the callback or undefined if the callback returns nothing.
+     * @returns Returns the same value returned by the callback or undefined if the callback has no returns.
      */
-    static listChildByProperty(slot: HTMLSlotElement, property: PropertyKey, callback: Callback): any;
+    static listChildrenByProperty(slot: HTMLSlotElement, property: PropertyKey, callback: Callback): any;
     /**
-     * Gets the first child that is instance of the provided expected type from the specified element slot.
+     * Gets the first child of the expected type from the specified element slot.
      * @param slot Element slot.
      * @param type Expected instance type.
      * @returns Returns the first child or undefined when there is no child found.
@@ -55,11 +55,4 @@ export declare class Helper {
      * @returns Returns true when the child was found and updated, false otherwise.
      */
     static setChildProperty(slot: HTMLSlotElement, property: PropertyKey, value: any): boolean;
-    /**
-     * Assign all values mapped by the specified keys into the target object.
-     * @param target Target object.
-     * @param values Values to be assigned.
-     * @param keys Keys to be assigned.
-     */
-    static assignProperties(target: Object, values: Object, keys: string[]): void;
 }

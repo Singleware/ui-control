@@ -25,7 +25,24 @@ export class Component<T extends Properties> implements JSX.ElementClass {
   protected readonly children: any[];
 
   /**
-   * Binds the property descriptor from the specified prototype to be called with this istance context.
+   * Gets the property descriptor that corresponds to the specified property name and source prototype.
+   * @param prototype Source prototype.
+   * @param property Property name.
+   * @returns Returns a the corresponding property descriptor or undefined when the property was not found.
+   */
+  @Class.Private()
+  private getPropertyDescriptor(prototype: Object, property: PropertyKey): PropertyDescriptor | undefined {
+    do {
+      const descriptor = Object.getOwnPropertyDescriptor(prototype, property);
+      if (descriptor) {
+        return descriptor;
+      }
+    } while ((prototype = Reflect.getPrototypeOf(prototype)));
+    return void 0;
+  }
+
+  /**
+   * Binds the property descriptor from the specified prototype to be called with this instance context.
    * @param prototype Source prototype.
    * @param property Property name.
    * @returns Returns a new property descriptor.
@@ -33,7 +50,7 @@ export class Component<T extends Properties> implements JSX.ElementClass {
    */
   @Class.Private()
   private bindDescriptor(prototype: Object, property: PropertyKey): PropertyDescriptor {
-    const descriptor = Object.getOwnPropertyDescriptor(prototype, property);
+    const descriptor = this.getPropertyDescriptor(prototype, property);
     if (!descriptor) {
       throw new Error(`Property '${property as string}' was not found.`);
     }

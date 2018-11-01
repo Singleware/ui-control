@@ -25,14 +25,29 @@ let Component = class Component {
         this.children = Object.freeze(children || []);
     }
     /**
-     * Binds the property descriptor from the specified prototype to be called with this istance context.
+     * Gets the property descriptor that corresponds to the specified property name and source prototype.
+     * @param prototype Source prototype.
+     * @param property Property name.
+     * @returns Returns a the corresponding property descriptor or undefined when the property was not found.
+     */
+    getPropertyDescriptor(prototype, property) {
+        do {
+            const descriptor = Object.getOwnPropertyDescriptor(prototype, property);
+            if (descriptor) {
+                return descriptor;
+            }
+        } while ((prototype = Reflect.getPrototypeOf(prototype)));
+        return void 0;
+    }
+    /**
+     * Binds the property descriptor from the specified prototype to be called with this instance context.
      * @param prototype Source prototype.
      * @param property Property name.
      * @returns Returns a new property descriptor.
      * @throws Throws an error when the specified property was not found.
      */
     bindDescriptor(prototype, property) {
-        const descriptor = Object.getOwnPropertyDescriptor(prototype, property);
+        const descriptor = this.getPropertyDescriptor(prototype, property);
         if (!descriptor) {
             throw new Error(`Property '${property}' was not found.`);
         }
@@ -91,6 +106,9 @@ __decorate([
 __decorate([
     Class.Protected()
 ], Component.prototype, "children", void 0);
+__decorate([
+    Class.Private()
+], Component.prototype, "getPropertyDescriptor", null);
 __decorate([
     Class.Private()
 ], Component.prototype, "bindDescriptor", null);

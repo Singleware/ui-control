@@ -12,7 +12,14 @@ export declare class Component<T extends Properties> implements JSX.ElementClass
      */
     protected readonly children: any[];
     /**
-     * Binds the property descriptor from the specified prototype to be called with this istance context.
+     * Gets the property descriptor that corresponds to the specified property name and source prototype.
+     * @param prototype Source prototype.
+     * @param property Property name.
+     * @returns Returns a the corresponding property descriptor or undefined when the property was not found.
+     */
+    private getPropertyDescriptor;
+    /**
+     * Binds the property descriptor from the specified prototype to be called with this instance context.
      * @param prototype Source prototype.
      * @param property Property name.
      * @returns Returns a new property descriptor.

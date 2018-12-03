@@ -1,10 +1,15 @@
+/**
+ * Copyright (C) 2018 Silas B. Domingos
+ * This source code is licensed under the MIT License as described in the file LICENSE.
+ */
+import * as Class from '@singleware/class';
 import { Constructor, Callback } from './types';
 /**
  * Control helper class.
  */
-export declare class Helper {
+export declare class Helper extends Class.Null {
     /**
-     * List all children of the expected type in the provided element slot and executes the given callback for each child.
+     * List all children of the expected type in the provided element slot and performs the given callback for each child.
      * @param slot Element slot.
      * @param type Expected instance type.
      * @param callback Callback to be performed.
@@ -12,7 +17,7 @@ export declare class Helper {
      */
     static listChildrenByType<T extends HTMLElement>(slot: HTMLSlotElement, type: Constructor<T>, callback: Callback): any;
     /**
-     * List all children that contains the expected property in the provided element slot and executes the given callback for each child.
+     * List all children that contains the expected property in the provided element slot and performs the given callback for each child.
      * @param slot Element slot.
      * @param property Expected property.
      * @param callback Callback to be executed for each child.

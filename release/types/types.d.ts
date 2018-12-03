@@ -12,4 +12,4 @@ export type Callback = (child: HTMLElement) => any;
 /**
  * Type declaration for class constructors.
  */
-export type Constructor<T extends HTMLElement = any> = Class.Constructor<T>;
+export type Constructor<T extends HTMLElement = any> = new (...args: any[]) => T;

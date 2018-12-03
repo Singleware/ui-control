@@ -12,32 +12,33 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 const Class = require("@singleware/class");
 /**
- * Control component class.
+ * Component class.
  */
-let Component = class Component {
+let Component = class Component extends Class.Null {
     /**
      * Default constructor.
      * @param properties Initial properties.
      * @param children Initial children.
      */
     constructor(properties, children) {
+        super();
         this.properties = Object.freeze(properties || {});
         this.children = Object.freeze(children || []);
     }
     /**
-     * Gets the property descriptor that corresponds to the specified property name and source prototype.
-     * @param prototype Source prototype.
+     * Gets the property descriptor that corresponds to the specified property name and prototype source.
+     * @param prototype Prototype source.
      * @param property Property name.
-     * @returns Returns a the corresponding property descriptor or undefined when the property was not found.
+     * @returns Returns the corresponding property descriptor or undefined when the property was not found.
      */
     getPropertyDescriptor(prototype, property) {
-        do {
-            const descriptor = Object.getOwnPropertyDescriptor(prototype, property);
-            if (descriptor) {
-                return descriptor;
+        let descriptor;
+        while (!(descriptor = Object.getOwnPropertyDescriptor(prototype, property))) {
+            if (!(prototype = Reflect.getPrototypeOf(prototype))) {
+                break;
             }
-        } while ((prototype = Reflect.getPrototypeOf(prototype)));
-        return void 0;
+        }
+        return descriptor;
     }
     /**
      * Binds the property descriptor from the specified prototype to be called with this instance context.
@@ -93,8 +94,8 @@ let Component = class Component {
         }
     }
     /**
-     * Get control instance.
-     * @throws Always throw an exception when it is not implemented.
+     * Gets the component instance.
+     * @throws Always throw an exception when not implemented.
      */
     get element() {
         throw new Error(`Component not implemented.`);

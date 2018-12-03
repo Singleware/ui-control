@@ -14,9 +14,9 @@ const Class = require("@singleware/class");
 /**
  * Control helper class.
  */
-let Helper = class Helper {
+let Helper = class Helper extends Class.Null {
     /**
-     * List all children of the expected type in the provided element slot and executes the given callback for each child.
+     * List all children of the expected type in the provided element slot and performs the given callback for each child.
      * @param slot Element slot.
      * @param type Expected instance type.
      * @param callback Callback to be performed.
@@ -35,7 +35,7 @@ let Helper = class Helper {
         return void 0;
     }
     /**
-     * List all children that contains the expected property in the provided element slot and executes the given callback for each child.
+     * List all children that contains the expected property in the provided element slot and performs the given callback for each child.
      * @param slot Element slot.
      * @param property Expected property.
      * @param callback Callback to be executed for each child.

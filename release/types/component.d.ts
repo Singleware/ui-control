@@ -1,10 +1,16 @@
+/**
+ * Copyright (C) 2018 Silas B. Domingos
+ * This source code is licensed under the MIT License as described in the file LICENSE.
+ */
+import * as Class from '@singleware/class';
 import { Properties } from './properties';
 /**
- * Control component class.
+ * Component class.
  */
-export declare class Component<T extends Properties> implements JSX.ElementClass {
+export declare class Component<T extends Properties> extends Class.Null implements JSX.ElementClass {
     /**
      * Component properties.
+     * (Public at compile-time, Protected at run-time)
      */
     readonly properties: T;
     /**
@@ -12,10 +18,10 @@ export declare class Component<T extends Properties> implements JSX.ElementClass
      */
     protected readonly children: any[];
     /**
-     * Gets the property descriptor that corresponds to the specified property name and source prototype.
-     * @param prototype Source prototype.
+     * Gets the property descriptor that corresponds to the specified property name and prototype source.
+     * @param prototype Prototype source.
      * @param property Property name.
-     * @returns Returns a the corresponding property descriptor or undefined when the property was not found.
+     * @returns Returns the corresponding property descriptor or undefined when the property was not found.
      */
     private getPropertyDescriptor;
     /**
@@ -46,8 +52,8 @@ export declare class Component<T extends Properties> implements JSX.ElementClass
      */
     constructor(properties?: T, children?: any[]);
     /**
-     * Get control instance.
-     * @throws Always throw an exception when it is not implemented.
+     * Gets the component instance.
+     * @throws Always throw an exception when not implemented.
      */
-    readonly element: HTMLElement;
+    readonly element: any;
 }

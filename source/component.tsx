@@ -8,12 +8,13 @@ import * as DOM from '@singleware/jsx';
 import { Properties } from './properties';
 
 /**
- * Control component class.
+ * Component class.
  */
 @Class.Describe()
-export class Component<T extends Properties> implements JSX.ElementClass {
+export class Component<T extends Properties> extends Class.Null implements JSX.ElementClass {
   /**
    * Component properties.
+   * (Public at compile-time, Protected at run-time)
    */
   @Class.Protected()
   public readonly properties: T;
@@ -25,20 +26,20 @@ export class Component<T extends Properties> implements JSX.ElementClass {
   protected readonly children: any[];
 
   /**
-   * Gets the property descriptor that corresponds to the specified property name and source prototype.
-   * @param prototype Source prototype.
+   * Gets the property descriptor that corresponds to the specified property name and prototype source.
+   * @param prototype Prototype source.
    * @param property Property name.
-   * @returns Returns a the corresponding property descriptor or undefined when the property was not found.
+   * @returns Returns the corresponding property descriptor or undefined when the property was not found.
    */
   @Class.Private()
   private getPropertyDescriptor(prototype: Object, property: PropertyKey): PropertyDescriptor | undefined {
-    do {
-      const descriptor = Object.getOwnPropertyDescriptor(prototype, property);
-      if (descriptor) {
-        return descriptor;
+    let descriptor;
+    while (!(descriptor = Object.getOwnPropertyDescriptor(prototype, property))) {
+      if (!(prototype = Reflect.getPrototypeOf(prototype))) {
+        break;
       }
-    } while ((prototype = Reflect.getPrototypeOf(prototype)));
-    return void 0;
+    }
+    return descriptor;
   }
 
   /**
@@ -105,16 +106,17 @@ export class Component<T extends Properties> implements JSX.ElementClass {
    * @param children Initial children.
    */
   constructor(properties?: T, children?: any[]) {
+    super();
     this.properties = Object.freeze(properties || {}) as T;
     this.children = Object.freeze(children || []) as any[];
   }
 
   /**
-   * Get control instance.
-   * @throws Always throw an exception when it is not implemented.
+   * Gets the component instance.
+   * @throws Always throw an exception when not implemented.
    */
   @Class.Public()
-  public get element(): HTMLElement {
+  public get element(): any {
     throw new Error(`Component not implemented.`);
   }
 }

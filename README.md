@@ -1,5 +1,7 @@
 # UI-Control
 
+This package provides some classes to help you create custom elements in a easy way.
+
 ## Install
 
 Using npm:
